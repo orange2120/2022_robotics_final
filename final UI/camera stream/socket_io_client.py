@@ -1,10 +1,10 @@
 import socketio
-import json
-import pickle
-import base64
+import numpy as np
+from socket_client_move import  Socket_Message_Publish 
 
 client = socketio.Client()
 
+rc_val = [984,999,999,988,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000]
 
 
 @client.event
@@ -12,44 +12,55 @@ def connect():
     print("I'm connected!")
 @client.event
 def connect_error(data):
-    print("The connection failed!")
+    #print("The connection failed!")
     print(data)
 @client.event
 def disconnect():
-    print("I'm disconnected!")
+    #print("I'm disconnected!")
     client.disconnect()
 
 @client.on('fire_topic/ui_to_agv')
 def on_message(data):
-    print('I received a message!')
-    print(data)
-
-@client.on('mode_test')
-def on_message(data):
-    print('I received a message!')
-    print(data)
+    Socket_Message_Publish(data)
 
 @client.on('move_topic/ui_to_agv')
 def on_message(data):
-    print('I received a message!')
-    print(data)
+    #print('I received a message!')
+    rc_val[1] = data
+    message = np.array(rc_val,dtype='<u2').tobytes()
+    Socket_Message_Publish(message)
+    
+
+@client.on('turn_topic/ui_to_agv')
+def on_message(data):
+    rc_val[0] = data
+    message = np.array(rc_val,dtype='<u2').tobytes()
+    Socket_Message_Publish(message)
+    
+
+@client.on('fire_topic/ui_to_agv')
+def on_message(data):
+    rc_val[9] = data
+    message = np.array(rc_val,dtype='<u2').tobytes()
+    Socket_Message_Publish(message)
+    
+    
 
 @client.on('orient_topic/ui_to_agv')
 def on_message(data):
-    print('I received a message!')
-    print(data)
+    rc_val[6] = data
+    message = np.array(rc_val,dtype='<u2').tobytes()
+    Socket_Message_Publish(message)
+    
+    
 
-@client.on('mode_topic/ui_to_agv')
+@client.on('shift_topic/ui_to_agv')
 def on_message(data):
-    print('I received a message!')
-    print(data)
+    rc_val[3] = data
+    message = np.array(rc_val,dtype='<u2').tobytes()
+    Socket_Message_Publish(message)
+    
 
-def SocketIO_Message_Publish(frame):
-    # use dump() to write array into file
-    imdata = pickle.dumps(frame)
-    json_frame= json.dumps({"image": base64.b64encode(imdata).decode('ascii')})
-    print(json_frame)
-    client.emit("ui_to_robot/destination",json_frame)
    
 client.connect('http://localhost:3001/socket.io')
 

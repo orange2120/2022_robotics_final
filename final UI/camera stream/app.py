@@ -1,6 +1,6 @@
 from flask import Flask,render_template,Response
 import cv2
-# import socket_io_client
+import socket_io_client
 
 app=Flask(__name__)
 class VideoCamera(object):

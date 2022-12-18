@@ -16,11 +16,16 @@ export default function Fire({socket}) {
     fill:'orange',
     outerHeight:300,
   }
-
+  const [fireFlag,setFireFlag] = useState(false)
   const onClickHandle=()=>{
-    console.log();
-    
-    socket.emit("fire_topic/ui_to_agv",true);
+    if(fireFlag){
+      setFireFlag(false);
+      socket.emit("fire_topic",false);
+    }
+    else{
+      setFireFlag(true);
+      socket.emit("fire_topic",true);
+    }
   }
   const [style,setStyle] = useState(styleUnClick)
   
@@ -29,7 +34,7 @@ export default function Fire({socket}) {
       //   {/* <svg style={{width:120, transform: `rotate(-40deg)`, fill:"red",stroke:'green'}} src={FireIcon}/> */}
       //   <FireIcon  style={style}  />
       // </IconButton>
-      <IconButton onClick={onClickHandle}  >
+      <IconButton onClick={onClickHandle}   >
       {/* <svg style={{width:120, transform: `rotate(-40deg)`, fill:"red",stroke:'green'}} src={FireIcon}/> */}
       <FireIcon  style={style}  />
     </IconButton>

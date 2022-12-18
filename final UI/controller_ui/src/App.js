@@ -5,7 +5,7 @@ import { Stack, Box} from "@mui/system";
 import { useState, useEffect} from "react";
 import { io } from "socket.io-client";
 var ip = "http://localhost"
-const socket = io.connect(ip);
+const socket = io.connect(ip+":3001");
 
 export default function App() {
   const [data, setData] = useState({
